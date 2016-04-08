@@ -10,10 +10,10 @@ RUN dpkg --add-architecture i386 && apt-get update && apt-get install -y --force
 
 
 RUN apt-get -y install lib32stdc++6 lib32z1 python-openssl && \
-    wget http://dl.google.com/android/android-sdk_r25.0.0-linux.tgz && \
-    tar -C /usr/local -xzf android-sdk_r25.0.0-linux.tgz && \
+    wget http://dl.google.com/android/android-sdk_r24.4.1-linux.tgz && \
+    tar -C /usr/local -xzf android-sdk_r24.4.1-linux.tgz && \
     pip install --upgrade google-api-python-client oauth2client tinys3 urllib3 trollop onesky-python && \
-    rm android-sdk_r25.0.0-linux.tgz && \
+    rm android-sdk_r24.4.1-linux.tgz && \
     (while :; do echo 'y'; sleep 2; done) | /usr/local/android-sdk-linux/tools/android update sdk --filter platform,tool,platform-tool,extra,build-tools-23.0.3 --no-ui --force -a
 
 # Setup environment
