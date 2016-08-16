@@ -6,10 +6,7 @@ RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true 
 RUN apt-get install -y oracle-java8-installer
 
 # Install Deps
-RUN dpkg --add-architecture i386 && apt-get update && apt-get install -y --force-yes expect git wget libc6-i386 lib32stdc++6 lib32gcc1 lib32ncurses5 lib32z1 curl python-pip python-setuptools
-
-# Install GNU Parallel (used to execute shell scripts concurrently)
-RUN apt-get install -y parallel
+RUN dpkg --add-architecture i386 && apt-get update && apt-get install -y --force-yes expect git wget libc6-i386 lib32stdc++6 lib32gcc1 lib32ncurses5 lib32z1 curl python-pip python-setuptools parallel
 
 RUN apt-get -y install lib32stdc++6 lib32z1 python-openssl && \
     wget http://dl.google.com/android/android-sdk_r24.4.1-linux.tgz && \
