@@ -6,7 +6,7 @@ RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true 
 RUN apt-get install -y oracle-java8-installer
 
 # Install Deps
-RUN dpkg --add-architecture i386 && apt-get update && apt-get install -y --force-yes expect git wget libc6-i386 lib32stdc++6 lib32gcc1 lib32ncurses5 lib32z1 curl python-pip python-setuptools parallel
+RUN dpkg --add-architecture i386 && apt-get update && apt-get install -y --force-yes expect git unzip wget libc6-i386 lib32stdc++6 lib32gcc1 lib32ncurses5 lib32z1 curl python-pip python-setuptools parallel
 
 RUN apt-get -y install lib32stdc++6 lib32z1 python-openssl && \
     wget http://dl.google.com/android/android-sdk_r24.4.1-linux.tgz && \
@@ -15,6 +15,12 @@ RUN apt-get -y install lib32stdc++6 lib32z1 python-openssl && \
     rm android-sdk_r24.4.1-linux.tgz && \
     (while :; do echo 'y'; sleep 2; done) | /usr/local/android-sdk-linux/tools/android update sdk --filter platform,tool,platform-tool,extra,build-tools-24.0.1 --no-ui --force -a
 
+# Install NDK
+RUN wget https://dl.google.com/android/repository/android-ndk-r12b-linux-x86_64.zip && \
+    unzip android-ndk-r12b-linux-x86_64.zip && \
+    mv android-ndk-r12b /usr/local/android-sdk-linux/ndk-bundle && \
+    rm android-ndk-r12b-linux-x86_64.zip
+    
 # Setup environment
 ENV ANDROID_HOME /usr/local/android-sdk-linux
 ENV PATH ${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
