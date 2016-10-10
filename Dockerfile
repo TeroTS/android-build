@@ -18,7 +18,7 @@ RUN apt-get -y install lib32stdc++6 lib32z1 python-openssl && \
 # Install NDK
 RUN wget https://dl.google.com/android/repository/android-ndk-r13-linux-x86_64.zip && \
     unzip android-ndk-r13-linux-x86_64.zip && \
-    mv android-ndk-r12b /usr/local/android-sdk-linux/ndk-bundle && \
+    mv android-ndk-r13 /usr/local/android-sdk-linux/ndk-bundle && \
     rm android-ndk-r13-linux-x86_64.zip
     
 # Setup environment
