@@ -13,7 +13,12 @@ RUN apt-get -y install lib32stdc++6 lib32z1 python-openssl && \
     tar -C /usr/local -xzf android-sdk_r24.4.1-linux.tgz && \
     pip install --upgrade google-api-python-client oauth2client tinys3 urllib3 trollop onesky-python && \
     rm android-sdk_r24.4.1-linux.tgz && \
-    (while :; do echo 'y'; sleep 2; done) | /usr/local/android-sdk-linux/tools/android update sdk --filter platform,tool,platform-tool,extra,build-tools-24.0.3,extra-android-m2repository --no-ui --force -a
+    (while :; do echo 'y'; sleep 2; done) | /usr/local/android-sdk-linux/tools/android update sdk --filter platform,tool,platform-tool,extra,build-tools-24.0.3,extra-android-m2repository --no-ui --force -a && \
+    mkdir -p /usr/local/android-sdk-linux/licenses
+
+# Install the licenses, WARNING if SDK updated the licenses need to be updated also
+
+COPY licenses /usr/local/android-sdk-linux/licenses
 
 # Install NDK
 RUN wget https://dl.google.com/android/repository/android-ndk-r13-linux-x86_64.zip && \
