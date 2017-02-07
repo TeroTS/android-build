@@ -1,41 +1,58 @@
 FROM ubuntu:16.04
 
-# Install java
-RUN apt-get update && apt-get install -yq software-properties-common && add-apt-repository -y ppa:webupd8team/java && apt-get update
-RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections
-RUN apt-get install -y oracle-java8-installer
+ARG JAVA_PREREQUIREMENTS="software-properties-common"
+ARG BUILD_PACKAGES="build-essential git unzip wget"
+ARG ANDROID_SDK_PACKAGES="platform,tool,platform-tool,extra,build-tools-24.0.3,extra-android-m2repository"
 
-# Install Deps
-RUN dpkg --add-architecture i386 && apt-get update && apt-get install -y --force-yes expect git unzip wget libc6-i386 lib32stdc++6 lib32gcc1 lib32ncurses5 lib32z1 curl python-pip python-setuptools parallel
+ENV ANDROID_SDK_VERSION r24.4.1
+ENV ANDROID_NDK_VERSION r13
 
-RUN apt-get -y install lib32stdc++6 lib32z1 python-openssl && \
-    wget http://dl.google.com/android/android-sdk_r24.4.1-linux.tgz && \
-    tar -C /usr/local -xzf android-sdk_r24.4.1-linux.tgz && \
-    pip install --upgrade google-api-python-client oauth2client tinys3 urllib3 trollop onesky-python && \
-    rm android-sdk_r24.4.1-linux.tgz && \
-    (while :; do echo 'y'; sleep 2; done) | /usr/local/android-sdk-linux/tools/android update sdk --filter platform,tool,platform-tool,extra,build-tools-24.0.3,extra-android-m2repository --no-ui --force -a && \
-    mkdir -p /usr/local/android-sdk-linux/licenses
-
-# Install the licenses, WARNING if SDK updated the licenses need to be updated also
-
+# Install the licenses, WARNING if SDK updated the licenses need to be updated also.
 COPY licenses /usr/local/android-sdk-linux/licenses
 
-# Install NDK
-RUN wget https://dl.google.com/android/repository/android-ndk-r13-linux-x86_64.zip && \
-    unzip android-ndk-r13-linux-x86_64.zip && \
-    mv android-ndk-r13 /usr/local/android-sdk-linux/ndk-bundle && \
-    rm android-ndk-r13-linux-x86_64.zip
-    
-# Setup environment
+RUN apt-get update && apt-get install -y ${JAVA_PREREQUIREMENTS} \
+    && add-apt-repository -y ppa:webupd8team/java \
+    && echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections && apt-get remove --purge -y ${JAVA_PREREQUIREMENTS} && \
+    rm -rf /var/lib/apt/lists/* && rm -rf /tmp/* /var/tmp/*
+
+RUN dpkg --add-architecture i386 && apt-get update && apt-get install -y \
+    ${BUILD_PACKAGES} \
+    expect \
+    libc6-i386 \
+    lib32gcc1 \
+    lib32ncurses5 \
+    lib32stdc++6 \
+    lib32z1 \
+    oracle-java8-installer \
+    parallel \
+    python-openssl \
+    python-pip \
+    python-setuptools \
+    && pip install --upgrade \
+    google-api-python-client \
+    oauth2client \
+    onesky-python \
+    tinys3 \
+    trollop \
+    urllib3 \
+
+    # Install NDK
+    && wget https://dl.google.com/android/repository/android-ndk-$ANDROID_NDK_VERSION-linux-x86_64.zip \
+    && unzip android-ndk-$ANDROID_NDK_VERSION-linux-x86_64.zip \
+    && mv android-ndk-$ANDROID_NDK_VERSION /usr/local/android-sdk-linux/ndk-bundle \
+    && rm android-ndk-$ANDROID_NDK_VERSION-linux-x86_64.zip \
+
+    # Install SDK
+    && wget http://dl.google.com/android/android-sdk_$ANDROID_SDK_VERSION-linux.tgz \
+    && tar -C /usr/local -xzf android-sdk_$ANDROID_SDK_VERSION-linux.tgz \
+    && rm android-sdk_$ANDROID_SDK_VERSION-linux.tgz \
+    && mkdir -p /opt/workspace \
+    && (while :; do echo 'y'; sleep 2; done) | /usr/local/android-sdk-linux/tools/android update sdk --filter ${ANDROID_SDK_PACKAGES} --no-ui --force && \
+    apt-get remove --purge -y ${BUILD_PACKAGES} && rm -rf /var/lib/apt/lists/* && rm -rf /tmp/* /var/tmp/*
+
+# Setup environment.
 ENV ANDROID_HOME /usr/local/android-sdk-linux
 ENV PATH ${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
 
-RUN which adb
-RUN which android
-
-# Cleaning
-RUN apt-get clean  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-# GO to workspace
-RUN mkdir -p /opt/workspace
+# Go to workspace.
 WORKDIR /opt/workspace
