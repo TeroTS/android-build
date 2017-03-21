@@ -2,7 +2,7 @@ FROM ubuntu:16.04
 
 ENV ANDROID_SDK_URL="https://dl.google.com/android/repository/tools_r25.2.3-linux.zip" \
     ANDROID_BUILD_TOOLS_VERSION=25.0.2 \
-    ANDROID_APIS="android-14,android-15,android-16,android-17,android-18,android-19,android-20,android-21,android-22,android-23,android-24,android-25" \
+    ANDROID_APIS="android-25" \
     ANDROID_HOME="/opt/android"
 
 # Install java
