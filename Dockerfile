@@ -19,7 +19,7 @@ RUN apt-get -y install lib32stdc++6 lib32z1 python-openssl && \
     mkdir -p ${ANDROID_HOME}  && cd ${ANDROID_HOME} && \
     wget -O tools.zip ${ANDROID_SDK_URL} && \
     unzip tools.zip && rm tools.zip && \
-    pip install --upgrade google-api-python-client oauth2client tinys3 urllib3 trollop onesky-python && \
+    pip install --upgrade google-api-python-client oauth2client boto3 urllib3 trollop onesky-python && \
     echo y | android update sdk -a -u -t platform-tools,${ANDROID_APIS},build-tools-${ANDROID_BUILD_TOOLS_VERSION} && \
     mkdir -p ${ANDROID_HOME}/licenses && \
     apt-get clean  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
