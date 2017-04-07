@@ -35,6 +35,7 @@ RUN dpkg --add-architecture i386 && apt-get update && apt-get install -y \
     google-api-python-client \
     oauth2client \
     onesky-python \
+    pyopenssl \
     trollop \
     urllib3 \
 
