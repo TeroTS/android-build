@@ -22,6 +22,7 @@ RUN dpkg --add-architecture i386 && apt-get update && apt-get install -y \
     lib32ncurses5 \
     lib32stdc++6 \
     lib32z1 \
+    libssl-dev \
     oracle-java8-installer \
     oracle-java8-set-default \
     parallel \
@@ -35,6 +36,7 @@ RUN dpkg --add-architecture i386 && apt-get update && apt-get install -y \
     google-api-python-client \
     oauth2client \
     onesky-python \
+    pyopenssl \
     trollop \
     urllib3 \
 
